@@ -10,3 +10,7 @@ This project scrapes data on PC components (CPU, GPU, etc.) to build a model tha
 - Host everything via Google Cloud Run and shinyapps.io
 
 ## Repo Structure (to come)
+
+## Deployment Plan
+- API: Flask + Google Cloud Run  
+- App: Streamlit + Google Cloud Run or shinyapps.io  
