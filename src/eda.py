@@ -1,77 +1,103 @@
-import pandas as pd
+import os
 import matplotlib.pyplot as plt
 import seaborn as sns
+import numpy as np
 
-# Configure seaborn styling
-sns.set(style="whitegrid")
+sns.set_theme(style="whitegrid")
 
-def plot_score_and_price_distributions(cpu_df, gpu_df):
+def ensure_plot_dir(project_root, label):
+    plot_dir = os.path.join(project_root, "plots", label)
+    os.makedirs(plot_dir, exist_ok=True)
+    return plot_dir
+
+
+def plot_score_and_price_distributions(cpu_df, gpu_df, plot_dir, label_prefix):
     """
-    Plots distributions of PassMark scores and prices for CPUs and GPUs.
+    Distributions of PassMark scores and prices.
     """
-    # CPU Score
-    plt.figure(figsize=(8, 4))
-    sns.histplot(cpu_df["PassMark_Score"], bins=50, kde=True)
-    plt.title("CPU Score Distribution")
-    plt.xlabel("PassMark Score")
-    plt.ylabel("Count")
-    plt.tight_layout()
-    plt.show()
+    for label, df in [("CPU", cpu_df), ("GPU", gpu_df)]:
+        # Score Distribution
+        plt.figure(figsize=(8, 4))
+        sns.histplot(df["PassMark_Score"], bins=50, kde=True)
+        plt.title(f"{label} Score Distribution")
+        plt.xlabel("PassMark Score")
+        plt.ylabel("Count")
+        plt.tight_layout()
+        plt.savefig(os.path.join(plot_dir, f"{label_prefix.lower()}_{label}_score_dist.png"))
+        plt.close()
 
-    # CPU Price
-    plt.figure(figsize=(8, 4))
-    sns.histplot(cpu_df["Price"], bins=40, kde=True)
-    plt.title("CPU Price Distribution")
-    plt.xlabel("Price (USD)")
-    plt.ylabel("Count")
-    plt.tight_layout()
-    plt.show()
+        # Price Distribution
+        plt.figure(figsize=(8, 4))
+        sns.histplot(df["Price"], bins=40, kde=True)
+        plt.title(f"{label} Price Distribution")
+        plt.xlabel("Price (USD)")
+        plt.ylabel("Count")
+        plt.tight_layout()
+        plt.savefig(os.path.join(plot_dir, f"{label_prefix.lower()}_{label}_price_dist.png"))
+        plt.close()
 
-    # GPU Score
-    plt.figure(figsize=(8, 4))
-    sns.histplot(gpu_df["PassMark_Score"], bins=50, kde=True)
-    plt.title("GPU Score Distribution")
-    plt.xlabel("PassMark Score")
-    plt.ylabel("Count")
-    plt.tight_layout()
-    plt.show()
+        # Boxplot
+        plt.figure(figsize=(6, 3))
+        sns.boxplot(x=df["Price"])
+        plt.title(f"{label} Price Boxplot")
+        plt.xlabel("Price (USD)")
+        plt.tight_layout()
+        plt.savefig(os.path.join(plot_dir, f"{label_prefix.lower()}_{label}_price_boxplot.png"))
+        plt.close()
 
-    # GPU Price
-    plt.figure(figsize=(8, 4))
-    sns.histplot(gpu_df["Price"], bins=40, kde=True)
-    plt.title("GPU Price Distribution")
-    plt.xlabel("Price (USD)")
-    plt.ylabel("Count")
-    plt.tight_layout()
-    plt.show()
 
-def plot_price_vs_performance(cpu_df, gpu_df):
+def plot_price_vs_performance(cpu_df, gpu_df, plot_dir, label_prefix):
     """
-    Plots price vs PassMark score for CPUs and GPUs.
+    Price vs performance scatter plots, linear and log-scale.
     """
-    plt.figure(figsize=(8, 5))
-    sns.scatterplot(data=cpu_df, x="PassMark_Score", y="Price")
-    plt.title("CPU: Price vs. Performance")
-    plt.xlabel("PassMark Score")
-    plt.ylabel("Price (USD)")
-    plt.tight_layout()
-    plt.show()
+    for label, df in [("CPU", cpu_df), ("GPU", gpu_df)]:
+        plt.figure(figsize=(8, 5))
+        sns.scatterplot(data=df, x="PassMark_Score", y="Price")
+        plt.title(f"{label}: Price vs. Performance")
+        plt.xlabel("PassMark Score")
+        plt.ylabel("Price (USD)")
+        plt.tight_layout()
+        plt.savefig(os.path.join(plot_dir, f"{label_prefix.lower()}_{label}_price_vs_score.png"))
+        plt.close()
 
-    plt.figure(figsize=(8, 5))
-    sns.scatterplot(data=gpu_df, x="PassMark_Score", y="Price")
-    plt.title("GPU: Price vs. Performance")
-    plt.xlabel("PassMark Score")
-    plt.ylabel("Price (USD)")
-    plt.tight_layout()
-    plt.show()
+        # Log Price
+        plt.figure(figsize=(8, 5))
+        sns.scatterplot(data=df, x="PassMark_Score", y=np.log1p(df["Price"]))
+        plt.title(f"{label}: Log Price vs. Performance")
+        plt.xlabel("PassMark Score")
+        plt.ylabel("Log(Price + 1)")
+        plt.tight_layout()
+        plt.savefig(os.path.join(plot_dir, f"{label_prefix.lower()}_{label}_logprice_vs_score.png"))
+        plt.close()
 
-def show_top_value_components(cpu_df, gpu_df, top_n=10):
+
+def plot_price_performance_ratio(cpu_df, gpu_df, plot_dir, label_prefix, top_n=20):
     """
-    Prints top N CPUs and GPUs sorted by value score.
+    Bar plots of price-to-performance ratio (inverse of ValueScore).
     """
-    print(f"\nTop {top_n} CPUs by Value:")
-    print(cpu_df.sort_values("ValueScore", ascending=False)[["CPU", "PassMark_Score", "Price", "ValueScore"]].head(top_n))
+    for label, df, name_col in [("CPU", cpu_df, "CPU"), ("GPU", gpu_df, "GPU")]:
+        df = df.copy()
+        df["PricePerScore"] = df["Price"] / df["PassMark_Score"]
+        top = df.sort_values("PricePerScore").head(top_n)
 
-    print(f"\nTop {top_n} GPUs by Value:")
-    print(gpu_df.sort_values("ValueScore", ascending=False)[["GPU", "PassMark_Score", "Price", "ValueScore"]].head(top_n))
+        plt.figure(figsize=(10, 6))
+        sns.barplot(x="PricePerScore", y=name_col, data=top, hue=name_col, palette="viridis", legend=False)
+
+        plt.title(f"Top {top_n} {label}s with Best Price-to-Performance")
+        plt.xlabel("Price / Score")
+        plt.ylabel(label)
+        plt.tight_layout()
+        plt.savefig(os.path.join(plot_dir, f"{label_prefix.lower()}_{label}_price_per_score.png"))
+        plt.close()
+
+
+
+def run_full_eda(cpu_df, gpu_df, project_root, label="clean"):
+    """
+    Runs all EDA visualizations and saves plots under a labeled subfolder.
+    """
+    plot_dir = ensure_plot_dir(project_root, label)
+    plot_score_and_price_distributions(cpu_df, gpu_df, plot_dir, label)
+    plot_price_vs_performance(cpu_df, gpu_df, plot_dir, label)
+    plot_price_performance_ratio(cpu_df, gpu_df, plot_dir, label)
 
