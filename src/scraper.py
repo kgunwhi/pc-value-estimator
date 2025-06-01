@@ -5,7 +5,9 @@ import pandas as pd
 import time
 import random
 
+
 # Custom user-agent to avoid bot detection
+
 headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
                   "(KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"
@@ -25,12 +27,11 @@ def get_soup(url):
         print(f"Failed to fetch {url}: {e}")
         return None
 
-def scrape_passmark_cpu():
+def scrape_passmark_cpu(project_root):
     """
     Scrapes CPU Name, Score, Rank, Value Score, and Price from PassMark.
     Saves output as data/cpu_passmark.csv.
     """
-    os.makedirs("data", exist_ok=True)
 
     url = "https://www.cpubenchmark.net/cpu_list.php"
     soup = get_soup(url)
@@ -63,15 +64,17 @@ def scrape_passmark_cpu():
             continue
 
     df = pd.DataFrame(cpu_data)
-    df.to_csv("data/cpu_passmark.csv", index=False)
+
+    cpu_path = os.path.join(project_root, 'data', 'cpu_passmark.csv')
+    df.to_csv(cpu_path, index=False)
     print(f"Scraped {len(df)} CPUs with scores, prices, and value.")
 
-def scrape_passmark_gpu():
+def scrape_passmark_gpu(project_root):
     """
     Scrapes GPU Name, Score, Rank, Value Score, and Price from PassMark.
     Saves output as data/gpu_passmark.csv.
     """
-    os.makedirs("data", exist_ok=True)
+    os.makedirs("../data", exist_ok=True)
 
     url = "https://www.videocardbenchmark.net/gpu_list.php"
     soup = get_soup(url)
@@ -104,6 +107,7 @@ def scrape_passmark_gpu():
             continue
 
     df = pd.DataFrame(gpu_data)
-    df.to_csv("data/gpu_passmark.csv", index=False)
+    gpu_path = os.path.join(project_root, 'data', 'gpu_passmark.csv')
+    df.to_csv(gpu_path, index=False)
     print(f"Scraped {len(df)} GPUs with scores, prices, and value.")
 
