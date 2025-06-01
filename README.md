@@ -10,16 +10,33 @@ This project scrapes data on PC components (CPU, GPU, etc.) to build a model tha
 - Host everything via Google Cloud Run and shinyapps.io
 
 ## Repo Structure
--src
----app.py	: streamlit app with flask
----eda.py	: some eda
----main.py	: main calls all other functions
----preproc.py	: clean data
----scraper.py	: scrape cpu/gpu data from passmark
----xgb.py 	: train model
--README.md
--pc-value-estimator.sh : all in one shell script to scrape, train, and launch app
--requirements.txt : all dependencies required
+
+pc-value-estimator/ ← Project root
+├── .venv/ ← Python virtual environment (auto‐created by run_all.sh)
+│ ├── bin/
+│ ├── lib/
+│ └── …
+├── data/ ← Scraped & cleaned CSV files
+│ ├── cpu_passmark.csv ← Raw CPU PassMark + price data
+│ ├── gpu_passmark.csv ← Raw GPU PassMark + price data
+│ ├── cpu_clean.csv ← Cleaned CPU data (filtered, brand tags, numeric)
+│ └── gpu_clean.csv ← Cleaned GPU data (filtered, brand tags, numeric)
+│
+├── model/ ← Saved trained model artifacts
+│ └── cpu_price_model.pkl ← Random Forest regressor for CPU price
+│
+├── src/ ← All Python source code
+│ ├── app.py ← Combined Streamlit UI + embedded Flask API
+│ ├── eda.py ← Exploratory data analysis scripts
+│ ├── main.py ← Orchestrates scraper, preproc, training, etc.
+│ ├── preproc.py ← Cleans raw CSVs → data/*_clean.csv
+│ ├── scraper.py ← Scrapes CPU/GPU PassMark data → data/*.csv
+│ ├── xgb.py ← (Or train_model.py) trains CPU Random Forest model → model/cpu_price_model.pkl
+│ └── streamlit_app.py ← If you split app.py into a dedicated Streamlit file
+│
+├── requirements.txt ← All Python dependencies
+├── run_all.sh ← One‐click shell script to scrape, clean, train, and launch the app
+└── README.md ← This file
 
 ## Deployment Plan
 - API: Flask + Google Cloud Run  
