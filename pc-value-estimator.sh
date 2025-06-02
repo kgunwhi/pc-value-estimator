@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# run_all.sh
+# pc-value-estimator.sh
 #   - Activates .venv
 #   - Installs dependencies
 #   - Scrapes data, cleans it, trains the model
@@ -39,4 +39,4 @@ python src/main.py
 
 # 5) Launch the combined Flask + Streamlit app
 echo "==> Launching Streamlit app (with embedded Flask)…"
-streamlit run src/app.py
+streamlit run src/app.py --server.port=8080 --server.address=0.0.0.0
