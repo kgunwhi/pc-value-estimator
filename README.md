@@ -22,6 +22,7 @@ The Docker image is built using Google Cloud Build and automatically served via 
 ```bash
 git clone https://github.com/kgunwhi/pc-value-estimator.git
 cd pc-value-estimator
+./pc-value-estimator.sh
 ```
 
 ### 2. Run with Docker
