@@ -1,4 +1,4 @@
-# PC Value Estimator 💻💸
+# PC Value Estimator
 
 This project estimates the fair market price of a CPU and GPU based on performance benchmarks using machine learning. It includes a web app (Streamlit + Flask) deployed on Google Cloud Run.
 
@@ -38,9 +38,9 @@ pc-value-estimator/
 ├── src/                  # All source code (Streamlit, Flask, scraping, catboost)
 ├── model/                # Trained models (generated at runtime)
 ├── data/                 # Processed benchmark CSVs (generated at runtime)
-├── catboost_info/        # catboost training logs (generated at runtime)
+├── catboost_info/        # catboost training logs (generated at runtime )
 ├── plots/                # EDA (generated at runtime)
-├── slides/               # Final presentation
+├── presentation/         # Final presentation and final report
 ├── Dockerfile            # Docker config
 ├── pc-value-estimator.sh # Run script (local or cloud)
 ├── requirements.txt      # Python dependencies
