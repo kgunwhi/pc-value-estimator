@@ -1,7 +1,7 @@
-# Use an official lightweight Python image
+# Use lightweight Python base image
 FROM python:3.10-slim
 
-# Set environment variables
+# Environment settings
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 ENV PORT=8080
@@ -9,15 +9,15 @@ ENV PORT=8080
 # Set working directory
 WORKDIR /app
 
-# Copy all files into the container
+# Copy project files
 COPY . .
 
 # Upgrade pip and install dependencies
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
-# Ensure your launch script is executable
+# Make your shell script executable
 RUN chmod +x pc-value-estimator.sh
 
-# Run Streamlit (which includes embedded Flask)
+# Run the app using your shell script
 CMD ["sh", "pc-value-estimator.sh"]

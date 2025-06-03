@@ -46,7 +46,7 @@ def predict_gpu():
 
 
 def run_flask():
-    flask_app.run(host="127.0.0.1", port=5000)
+    flask_app.run(host="0.0.0.0", port=5050)
 
 
 flask_thread = threading.Thread(target=run_flask, daemon=True)
@@ -132,8 +132,8 @@ if st.button("Estimate Values"):
             "Brand": str(gpu_row["Brand"])
         }
 
-        cpu_response = requests.post("http://127.0.0.1:5000/predict_cpu", json=cpu_payload, timeout=3)
-        gpu_response = requests.post("http://127.0.0.1:5000/predict_gpu", json=gpu_payload, timeout=3)
+        cpu_response = requests.post("http://localhost:5050/predict_cpu", json=cpu_payload, timeout=3)
+        gpu_response = requests.post("http://localhost:5050/predict_gpu", json=gpu_payload, timeout=3)
 
         if cpu_response.status_code == 200:
             cpu_est_price = cpu_response.json()["estimated_price"]

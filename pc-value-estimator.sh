@@ -14,14 +14,14 @@ cd "$(dirname "$0")"
 
 # 2) Activate (or create) the .venv and install dependencies
 if [ -f ".venv/bin/activate" ]; then
-    source .venv/bin/activate
+    . .venv/bin/activate
     echo "==> Installing Python dependencies into .venv..."
     python -m pip install --upgrade pip
     python -m pip install --upgrade -r requirements.txt
 else
     echo "==> .venv not found. Creating a new virtual environment..."
     python3 -m venv .venv
-    source .venv/bin/activate
+    . .venv/bin/activate
     echo "==> Installing Python dependencies into .venv..."
     python -m pip install --upgrade pip
     python -m pip install --upgrade -r requirements.txt
@@ -31,7 +31,7 @@ fi
 mkdir -p data
 mkdir -p model
 chmod +w data
-Chmod +w model
+chmod +w model
 
 # 4) Run the scraper to create data/cpu_passmark.csv & data/gpu_passmark.csv
 echo "==> Running scraper..."
@@ -39,4 +39,14 @@ python src/main.py
 
 # 5) Launch the combined Flask + Streamlit app
 echo "==> Launching Streamlit app (with embedded Flask)…"
-streamlit run src/app.py --server.port=8080 --server.address=0.0.0.0
+which streamlit || echo "streamlit not found"
+exec streamlit run src/app.py \
+  --server.port=8080 \
+  --server.address=0.0.0.0 \
+  --browser.serverAddress=localhost
+
+
+
+
+
+
