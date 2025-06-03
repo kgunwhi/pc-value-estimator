@@ -39,7 +39,7 @@ pc-value-estimator/
 ├── model/                # Trained models (generated at runtime)
 ├── data/                 # Processed benchmark CSVs (generated at runtime)
 ├── catboost_info/        # catboost training logs (generated at runtime )
-├── plots/                # EDA (generated at runtime)
+├── plots/                # EDA (generated at runtime) and optionally, post analysis plots
 ├── presentation/         # Final presentation and final report
 ├── Dockerfile            # Docker config
 ├── pc-value-estimator.sh # Run script (local or cloud)
