@@ -22,6 +22,10 @@ This folder contains all source code for the PC Value Estimator application. The
 - `eda.py`  
   Generates exploratory visualizations, summary statistics, and feature plots, which are saved to the `plots/` directory.
 
+- `cat_analysis.py`
+  [optional] Generates post analysis plots of CatBoost model
+  [note] Is not included in docker image
+  
 ## Usage
 
 Run the entire pipeline locally in terminal:
