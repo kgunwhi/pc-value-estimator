@@ -18,7 +18,7 @@ The Docker image is built using Google Cloud Build and automatically served via 
 
 ## Getting Started
 
-### 1. Clone the repo and run the app locally
+### 1. Clone the repo and run the app locally in terminal
 ```bash
 git clone https://github.com/kgunwhi/pc-value-estimator.git
 cd pc-value-estimator
