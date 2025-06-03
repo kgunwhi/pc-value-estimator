@@ -1,43 +1,51 @@
-# pc-value-estimator
+# PC Value Estimator 💻💸
 
-This project scrapes data on PC components (CPU, GPU, etc.) to build a model that evaluates performance-to-price ratios. Users can upload their system specs, and the app will estimate whether they overpaid based on market benchmarks.
+This project estimates the fair market price of a CPU and GPU based on performance benchmarks using machine learning. It includes a web app (Streamlit + Flask) deployed on Google Cloud Run.
 
-## Project Goals
-- Scrape PC part prices and performance benchmarks
-- Build a simple regression model to estimate "fair price" using random forest or xgboost
-- Deploy a web application using Shiny
-- Deploy a backend API (Flask) for predictions
-- Host everything via Google Cloud Run and shinyapps.io
+## Features
+- Scrapes CPU/GPU benchmark and pricing data
+- Trains machine learning models (CatBoost, etc.)
+- Predicts fair price from user input
+- Fully containerized with Docker
+- Live on Google Cloud Run 
 
-## Repo Structure
+## Deployment
+This app is deployed to Google Cloud Run.
+The Docker image is built using Google Cloud Build and automatically served via HTTPS.
 
-pc-value-estimator/ ← Project root
-├── .venv/ ← Python virtual environment (auto‐created by run_all.sh)
-│ ├── bin/
-│ ├── lib/
-│ └── …
-├── data/ ← Scraped & cleaned CSV files
-│ ├── cpu_passmark.csv ← Raw CPU PassMark + price data
-│ ├── gpu_passmark.csv ← Raw GPU PassMark + price data
-│ ├── cpu_clean.csv ← Cleaned CPU data (filtered, brand tags, numeric)
-│ └── gpu_clean.csv ← Cleaned GPU data (filtered, brand tags, numeric)
-│
-├── model/ ← Saved trained model artifacts
-│ └── cpu_price_model.pkl ← Random Forest regressor for CPU price
-│
-├── src/ ← All Python source code
-│ ├── app.py ← Combined Streamlit UI + embedded Flask API
-│ ├── eda.py ← Exploratory data analysis scripts
-│ ├── main.py ← Orchestrates scraper, preproc, training, etc.
-│ ├── preproc.py ← Cleans raw CSVs → data/*_clean.csv
-│ ├── scraper.py ← Scrapes CPU/GPU PassMark data → data/*.csv
-│ ├── xgb.py ← (Or train_model.py) trains CPU Random Forest model → model/cpu_price_model.pkl
-│ └── streamlit_app.py ← If you split app.py into a dedicated Streamlit file
-│
-├── requirements.txt ← All Python dependencies
-├── run_all.sh ← One‐click shell script to scrape, clean, train, and launch the app
-└── README.md ← This file
+## Demo
+[Live App](https://pc-value-estimator-135418392758.us-central1.run.app)
 
-## Deployment Plan
-- API: Flask + Google Cloud Run  
-- App: Streamlit + Google Cloud Run or shinyapps.io  
+## Getting Started
+
+### 1. Clone the repo and run the app locally
+```bash
+git clone https://github.com/kgunwhi/pc-value-estimator.git
+cd pc-value-estimator
+```
+
+### 2. Run with Docker
+```bash
+docker build -t pc-value-estimator .
+docker run -p 8080:8080 pc-value-estimator
+```
+
+
+## Project Structure
+```
+pc-value-estimator/
+├── src/                  # All source code (Streamlit, Flask, scraping, catboost)
+├── model/                # Trained models (generated at runtime)
+├── data/                 # Processed benchmark CSVs (generated at runtime)
+├── catboost_info/        # catboost training logs (generated at runtime)
+├── plots/                # EDA (generated at runtime)
+├── slides/               # Final presentation
+├── Dockerfile            # Docker config
+├── pc-value-estimator.sh # Run script (local or cloud)
+├── requirements.txt      # Python dependencies
+└── README.md             # You're here
+```
+
+
+## Author
+Alexander Kim - STAT 418 - UCLA
