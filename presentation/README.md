@@ -20,7 +20,7 @@ Open with any PDF viewer. Designed to accompany a 4–5 minute oral walkthrough.
 
 ---
 
-## Final Report (to come)
+## Final Report
 
 - **File:** `pc-value-estimator-report.pdf`
 
