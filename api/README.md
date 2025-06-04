@@ -29,7 +29,7 @@ curl -X POST http://localhost:5050/predict_cpu \
 ```
 Sample Output: 
 ```bash
-{"estimated_price": 1184.49}
+{"estimated_price": 896.59}
 ```
 
 
@@ -50,6 +50,6 @@ curl -X POST http://localhost:5050/predict_gpu \
 ```
 Sample Output: 
 ```bash
-{"estimated_price":781.88}
+{"estimated_price":1036.44}
 ```
 
